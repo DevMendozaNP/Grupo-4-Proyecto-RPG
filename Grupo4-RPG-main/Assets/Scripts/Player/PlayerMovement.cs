@@ -35,6 +35,25 @@ public class PlayerMovement : MonoBehaviour
     private GameObject weaponIcon;
     [SerializeField]
     private GameObject healthMeter;
+    [SerializeField]
+    private GameObject loseRestart;
+
+    [SerializeField]
+    private AudioSource weaponSwitcher;
+    [SerializeField]
+    private AudioSource ballAttack;
+    [SerializeField]
+    private AudioSource swordAttack;
+    [SerializeField]
+    private AudioSource hurtSound;
+    [SerializeField]
+    private AudioSource jumpSound;
+    [SerializeField]
+    private AudioSource deathSound;
+    [SerializeField]
+    private AudioSource messagePopUp;
+    [SerializeField]
+    private AudioSource messageGoOn;
 
     private void Awake() 
     {
@@ -129,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
             attackSwitcher = true;
             weaponIcon.GetComponent<WeaponIcon>().weaponChange();
         } 
+        weaponSwitcher.Play();
     }
 
     private void OnAttack(InputValue value) 
@@ -137,11 +157,13 @@ public class PlayerMovement : MonoBehaviour
         {
             GameObject Ball = Instantiate(PowerBall, FirePoint.transform.position, Quaternion.identity);
             Ball.GetComponent<EnergyMovement>().Direction = currDir;
+            ballAttack.Play();
         }
         else if (attackSwitcher == false)
         {
             GameObject Knife = Instantiate(Sword, MeleePoint.transform.position, Quaternion.identity);
             Knife.GetComponent<SwordMovement>().Direction = SwordPointing;
+            swordAttack.Play();
         }
 
     }
@@ -151,6 +173,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity += new Vector3(0,JumpSpeed,0);
             groundCheck = false;
+            jumpSound.Play();
         }
     }
 
@@ -159,6 +182,7 @@ public class PlayerMovement : MonoBehaviour
         if (value.isPressed)
         {
             // Siguiente Dialogo
+            messageGoOn.Play();
             DialogueManager.Instance.NextDialogue();
         }
     }
@@ -169,6 +193,7 @@ public class PlayerMovement : MonoBehaviour
         if (dialogue != null)
         {
             // Iniciar Sistema de Dialogos
+            messagePopUp.Play();
             DialogueManager.Instance.StartDialogue(dialogue);
         }
         if (other.gameObject.layer == 6)
@@ -182,7 +207,10 @@ public class PlayerMovement : MonoBehaviour
             if (HP <= 0) 
             {
                 Destroy(gameObject);
+                this.loseRestart.SetActive(true);
+                deathSound.Play();
             }
+            hurtSound.Play();
         }
         if (other.gameObject.layer == 10)
         {
@@ -190,8 +218,11 @@ public class PlayerMovement : MonoBehaviour
             healthMeter.GetComponent<HealthBar>().ReceiveDamage(HP);
             if (HP <= 0) 
             {
+                deathSound.Play();
                 Destroy(gameObject);
-            } 
+                this.loseRestart.SetActive(true);
+            }
+            hurtSound.Play();
         }
 
     }

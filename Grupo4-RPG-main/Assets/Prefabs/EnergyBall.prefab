@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Direction: {x: 0, y: 0, z: 0}
   Speed: 3
-  timeToDestroy: 1.5
+  timeToDestroy: 5
 --- !u!212 &3864354238945252313
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -148,5 +148,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.7
+  m_Radius: 0.45
   m_Center: {x: 0, y: 0, z: 0}

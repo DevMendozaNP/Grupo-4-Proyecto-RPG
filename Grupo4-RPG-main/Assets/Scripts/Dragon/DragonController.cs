@@ -31,7 +31,16 @@ public class DragonController : MonoBehaviour
     public Animator animator {private set; get;}
     #endregion
 
-    
+    [SerializeField]
+    private GameObject bossAmbiance;
+    [SerializeField]
+    private GameObject winRestart;
+    [SerializeField]
+    private AudioSource breathSound;
+    [SerializeField]
+    private AudioSource dragonDeath;
+    [SerializeField]
+    private AudioSource hitSound;
 
     private void Awake() 
     {
@@ -93,20 +102,24 @@ public class DragonController : MonoBehaviour
     {
         GameObject stone = Instantiate(prefabStone, FirePoint.position, Quaternion.identity);
         stone.GetComponent<StoneMovement>().Direction = Player.position - FirePointDirection.position;
-
+        breathSound.Play();
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.layer == 7)
         {
-            Debug.Log("Lo Mato x2");
+            hitSound.Play();
             HP -= 1;
             UpdateHealthBar();
             if (HP <= 0) 
             {
+                dragonDeath.Play();
                 Destroy(gameObject);
+                bossAmbiance.GetComponent<BossAmbiance>().BossDied();
+                this.winRestart.SetActive(true);
             }
+            
             
         }
 

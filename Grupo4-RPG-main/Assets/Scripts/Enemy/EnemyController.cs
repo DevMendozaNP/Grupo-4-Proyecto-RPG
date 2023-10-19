@@ -27,7 +27,12 @@ public class EnemyController : MonoBehaviour
     public Animator animator {private set; get;}
     #endregion
 
-    
+    [SerializeField]
+    private AudioSource monsterAttackSound;
+    [SerializeField]
+    private AudioSource monsterDeathSound;
+    [SerializeField]
+    private AudioSource monsterHitSound;
 
     private void Awake() 
     {
@@ -66,7 +71,7 @@ public class EnemyController : MonoBehaviour
     {
         GameObject stone = Instantiate(prefabStone, FirePoint.position, Quaternion.identity);
         stone.GetComponent<StoneMovement>().Direction = Player.position - transform.position;
-
+        monsterAttackSound.Play();
     }
 
     private void OnCollisionEnter(Collision other)
@@ -80,8 +85,10 @@ public class EnemyController : MonoBehaviour
                 HP -= 1;
                 if (HP <= 0) 
                 {
+                    monsterDeathSound.Play();
                     Destroy(gameObject);
                 } 
+                monsterHitSound.Play();
             }
             
             SwordMovement sword = other.gameObject.GetComponent<SwordMovement>();
@@ -91,8 +98,10 @@ public class EnemyController : MonoBehaviour
                 HP -= 3;
                 if (HP <= 0) 
                 {
+                    monsterDeathSound.Play();
                     Destroy(gameObject);
-                } 
+                }
+                monsterHitSound.Play(); 
             }
                
         }
